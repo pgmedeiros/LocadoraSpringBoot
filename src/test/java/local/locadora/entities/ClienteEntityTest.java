@@ -19,9 +19,6 @@ import org.junit.Rule;
 import org.junit.rules.ExpectedException;
 
 public class ClienteEntityTest {
-    
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
 
     private static Validator validator;
     
@@ -55,16 +52,36 @@ public class ClienteEntityTest {
     
     @Test
     public void naoDeveAceitarNomeComSimbolosENumeros(){
-        exception.expect(ClienteException.class);
-        exception.expectMessage("Nome não deve possuir simbolos ou números");
+        expected.expect(ClienteException.class);
+        expected.expectMessage("Nome não deve possuir simbolos ou números");
         Cliente cliente = new Cliente();
         cliente.setNome("J0rge Silva"); 
     }
     @Test
+    public void nomeDeveSerCampoUnico(){
+        Cliente cliente = new Cliente();
+        cliente.setNome("Angelo");
+        
+        try {
+            
+        }catch (ClienteException ex){
+        
+    }
+    
+    
+    }
+    @Test
     public void naoDeveRegistrarNomeComEspacosNoInicioFim(){
         Cliente cliente = new Cliente();
-        cliente.setNome(" Angelo Luz ");
-        assertThat(cliente.getNome(),is("Angelo Luz"));
+        cliente.setNome(" Patrick Medeiros ");
+        assertThat(cliente.getNome(),is("Patrick Medeiros"));
     }
+    @Test
+    public void nomeComPrimeiraLetraMaiuscula(){
+        Cliente cliente = new Cliente();
+        cliente.setNome("patrick medeiros");
+        assertThat(cliente.getNome(),is("Patrick Medeiros"));
+    }
+    
 }
 
