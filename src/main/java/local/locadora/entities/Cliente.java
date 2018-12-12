@@ -8,6 +8,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import local.locadora.exceptions.ClienteException;
 
 @Entity
 @Validated
@@ -50,6 +51,9 @@ public class Cliente implements Serializable {
     }
 
     public void setNome(String nome) {
+        if(!nome.matches("[a-zA-ZàèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃçÇ ]+")){
+            throw new ClienteException("Nome não deve possuir simbolos ou números");
+        }
         this.nome = nome.trim();
     }
 

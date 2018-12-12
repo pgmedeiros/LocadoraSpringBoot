@@ -11,6 +11,7 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.util.Iterator;
 import java.util.Set;
+import local.locadora.exceptions.ClienteException;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -18,6 +19,9 @@ import org.junit.Rule;
 import org.junit.rules.ExpectedException;
 
 public class ClienteEntityTest {
+    
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
 
     private static Validator validator;
     
@@ -47,6 +51,20 @@ public class ClienteEntityTest {
         // }
 
         assertThat(message, is("Um nome deve possuir entre 4 e 50 caracteres"));
+    }
+    
+    @Test
+    public void naoDeveAceitarNomeComSimbolosENumeros(){
+        exception.expect(ClienteException.class);
+        exception.expectMessage("Nome não deve possuir simbolos ou números");
+        Cliente cliente = new Cliente();
+        cliente.setNome("J0rge Silva"); 
+    }
+    @Test
+    public void naoDeveRegistrarNomeComEspacosNoInicioFim(){
+        Cliente cliente = new Cliente();
+        cliente.setNome(" Angelo Luz ");
+        assertThat(cliente.getNome(),is("Angelo Luz"));
     }
 }
 
