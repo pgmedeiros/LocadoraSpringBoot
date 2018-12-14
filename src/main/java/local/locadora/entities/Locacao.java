@@ -11,6 +11,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import local.locadora.exceptions.LocacaoException;
 
 @Entity
 @Validated
@@ -51,6 +52,9 @@ public class Locacao implements Serializable {
     }
 
     public void setCliente(Cliente cliente) {
+        if(cliente==null){
+            throw new LocacaoException("Um cliente deve ser selecionado");
+        }
         this.cliente = cliente;
     }
 

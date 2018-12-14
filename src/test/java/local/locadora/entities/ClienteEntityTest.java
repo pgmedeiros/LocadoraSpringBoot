@@ -15,6 +15,7 @@ import local.locadora.exceptions.ClienteException;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
 
@@ -35,8 +36,33 @@ public class ClienteEntityTest {
      * Note que <b>validator</b> aplica a validação do bean validation
      * O Iterator é utilizado para pegar as violações ocorridas
      */
+    
     @Test
-    public void naoDeveValidarUmNomeComDoisCaracteres() {
+    public void cpfNaoValido(){
+        Cliente cliente = new Cliente();
+        String cpf = "021.571.990-099";
+       
+        cliente.setCpf(cpf);
+        cliente.setNome("Patrick Goncalves");
+        
+        Set<ConstraintViolation<Cliente>> violations = validator.validate(cliente);
+        Iterator it = violations.iterator();
+        ConstraintViolationImpl x = (ConstraintViolationImpl) it.next();
+        String message = x.getMessage();
+        
+        assertThat(message, is("O CPF não é válido"));	
+    }
+    
+    @Test
+    public void cpfTemQueSerUmValorValido(){        
+        Cliente cliente = new Cliente();
+        cliente.setCpf("12312312312");
+        
+        assertThat(cliente.getCpf(), is("12312312312"));
+    }
+    
+    @Test
+    public void nomeDeveTerEntreQuatroACinquentaCaracteres() {
         Cliente cliente = new Cliente();
         cliente.setNome("An");
 
@@ -57,31 +83,30 @@ public class ClienteEntityTest {
         Cliente cliente = new Cliente();
         cliente.setNome("J0rge Silva"); 
     }
-    @Test
+    
+    /*@Test
     public void nomeDeveSerCampoUnico(){
-        Cliente cliente = new Cliente();
-        cliente.setNome("Angelo");
-        
-        try {
-            
-        }catch (ClienteException ex){
-        
-    }
+     
+    }*/
     
-    
-    }
     @Test
     public void naoDeveRegistrarNomeComEspacosNoInicioFim(){
         Cliente cliente = new Cliente();
         cliente.setNome(" Patrick Medeiros ");
         assertThat(cliente.getNome(),is("Patrick Medeiros"));
     }
-    @Test
-    public void nomeComPrimeiraLetraMaiuscula(){
-        Cliente cliente = new Cliente();
-        cliente.setNome("patrick medeiros");
-        assertThat(cliente.getNome(),is("Patrick Medeiros"));
-    }
     
+    @Test
+     public void primeiraLetraDoNomeESobrenomeDevemSerMaiusculas() {
+
+        try {
+            Cliente cliente = new Cliente();
+            cliente.setNome("Patrick Gonçalves");
+            assertThat(cliente.getNome(), is("Patrick Gonçalves"));
+        } catch (Exception e) {
+            e.getMessage();
+            fail();
+        }
+    }
 }
 
